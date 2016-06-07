@@ -1,4 +1,4 @@
-# courseaweek4
+# courseraweek4
 
 ## The process have been the following:
 1. Reading the datasets, lables, features, test(x,y) and train(x,y) and subject for both train and test
