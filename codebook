@@ -1,0 +1,81 @@
+#Code used
+
+Overview:
+1. setwd()
+2. read.table()
+3. colnames()
+4. cbind()
+5. rbind()
+6. grep()
+7. gsub()
+8. ddply()
+9. colMeans()
+10. write.table()
+
+setwd(dir)
+label <- read.table("/activity_labels.txt")
+features <- read.table("features.txt")
+
+colnames(label) <- c("activityid", "activity")
+
+setwd(dir)
+
+testx <- read.table("/X_test.txt")
+testy <- read.table("/y_test.txt")
+subject_test <- read.table("/st.txt")
+
+colnames(testy) <- c("activityid")
+colnames(subject_test) <- c("subject_id")
+colnames(testx) <- features[,2]
+
+combinedtest <- cbind(testy,subject_test,testx)
+
+setwd(dir)
+
+trainx <- read.table(dir)
+trainy <- read.table("/y_train.txt")
+subject_train <- read.table("/subject_train.txt")
+
+
+colnames(trainy) <- c("activityid")
+colnames(subject_train) <- c("subject_id")
+colnames(trainx) <- features[,2]
+
+combinedtrain <- cbind(trainy,subject_train,trainx)
+
+Train_Test_Combi <- rbind(combinedtest,combinedtrain)
+
+Train_Test_Combi[["activityid"]] <- label[match(Train_Test_Combi[["activityid"]], label[["activityid"]]), "activity"]
+
+mean_extract  <- grep("mean",colnames(Train_Test_Combi), value = TRUE)
+std_extract  <- grep("std", colnames(Train_Test_Combi), value = TRUE)
+
+total_extract  <-  cbind(Train_Test_Combi[,mean_extract], Train_Test_Combi[,std_extract], id_activity = Train_Test_Combi$activityid, subject_id = Train_Test_Combi$subject_id)
+
+col_idx <- grep("id_activity", colnames(total_extract))
+total_extract <- total_extract[, c(col_idx, (1:ncol(total_extract))[-col_idx])]
+col_idy <- grep("subject_id", colnames(total_extract))
+total_extract <- total_extract[, c(col_idy, (1:ncol(total_extract))[-col_idy])]
+
+colnames(Train_Test_Combi) <-  gsub("^t","time_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("Acc","_acceleration_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("Body","Body_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("Gravity","Gravity_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("mean()","Mean_Value_", colnames(Train_Test_Combi)) 
+colnames(Train_Test_Combi) <-  gsub("std()","Standard_Deviation", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("/()","", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("mad","Median_Absolute_Deviation_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("max","Largst_Value_in_Array", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("min","Smallest_Value_in_Array", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("energy","Energy_Measure_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("iqr","Interquartile_range_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("entropy","Signal_Entropy_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("arCoeff","Autorregresion_coefficients_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("maxInds","Frequency_Component_with_Largest_Magnitude_Index", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("meanFreq","Weighted:Avarage_of_frequency_Component_", colnames(Train_Test_Combi))
+colnames(Train_Test_Combi) <-  gsub("otal","", colnames(Train_Test_Combi))
+
+tidy_data <- ddply(Train_Test_Combi, .(subject_id, activityid), function(x) colMeans(x[,2:68]))
+
+
+write.table(tidy_data, "/tidy_data.txt", row.name=FALSE)
