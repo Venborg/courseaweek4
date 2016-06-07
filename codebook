@@ -1,3 +1,41 @@
+Variables included 
+
+
+The data used for this particular excercise:
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+
+It reflects an experiment carried out with 30 volunteers, who preformed various activities during the day while wearing a tracking device.
+What is measured is the acceleration signal from the smartphone accelerometer in standard gravity units 'g', the body acceleration signal obtained by subtracting the gravity from the total acceleration
+and the angular velocity vector measured by the gyroscope with units in radians/second.
+
+These signals were used to estimate variables of the feature vector for each pattern:  
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+
+tBodyAcc-XYZ
+tGravityAcc-XYZ
+tBodyAccJerk-XYZ
+tBodyGyro-XYZ
+tBodyGyroJerk-XYZ
+tBodyAccMag
+tGravityAccMag
+tBodyAccJerkMag
+tBodyGyroMag
+tBodyGyroJerkMag
+fBodyAcc-XYZ
+fBodyAccJerk-XYZ
+fBodyGyro-XYZ
+fBodyAccMag
+fBodyAccJerkMag
+fBodyGyroMag
+fBodyGyroJerkMag
+
+f = frequenct domain signals 
+t =  prefix for denote time.
+Acc = acceleration
+Gyro = Gyroscope
+Mag = Magnitude
+
+
 ## Code Used
 
 Overview:
